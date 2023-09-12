@@ -1,20 +1,57 @@
 <template>
-  <div class="home flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-    <div class="home-card p-5 bg-white rounded elevation-3">
-      <img src="https://bcw.blob.core.windows.net/public/img/8600856373152463" alt="CodeWorks Logo"
-        class="rounded-circle">
-      <h1 class="my-5 bg-dark text-white p-3 rounded text-center">
-        Vue 3 Starter
-      </h1>
+ <div class="container">
+  <section class="row text-center">
+    <h1>Surprise!</h1>
+  </section>
+ </div>
+
+
+ <section class="row g-3">
+
+   
+ 
+   <div v-for="g in gifts" :key="g.id" :gift="g" class="elevation-2 card col-4 ">
+    <!-- <GiftCard :gift="g"/> -->
+     <div>
+       <img class="img-fluid" :src="g.imgUrl" alt="">
+      </div>
+      <div>
+        <span>{{g.tag}}</span>
+      </div>
+      <span>{{ g.opended }}</span>
+   
     </div>
-  </div>
+    
+  </section>
+
+
+
 </template>
 
 <script>
+import { computed, onMounted } from 'vue';
+import Pop from '../utils/Pop.js';
+
+import { giftService } from '../services/GiftService.js';
+import { AppState } from '../AppState.js';
+
 export default {
-  setup() {
-    return {}
-  }
+    setup() {
+        onMounted(getGifts);
+        async function getGifts() {
+            try {
+                await giftService.getGifts();
+            }
+            catch (error) {
+                Pop.error(error);
+            }
+        }
+        return {
+            getGifts,
+            gifts: computed(() => AppState.gifts)
+        };
+    },
+    
 }
 </script>
 
